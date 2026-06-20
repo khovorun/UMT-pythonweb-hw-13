@@ -24,6 +24,7 @@ class ContactResponse(ContactBase):
     class Config:
         from_attributes = True
 
+
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
@@ -41,9 +42,11 @@ class UserResponse(BaseModel):
     email: EmailStr
     avatar: Optional[str] = None
     confirmed: bool
+    role: str
 
     class Config:
         from_attributes = True
+
 
 class Token(BaseModel):
     access_token: str
@@ -52,3 +55,13 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+class RequestPasswordReset(BaseModel):
+    email: EmailStr
+
+
+class ResetPassword(BaseModel):
+    token: str
+    new_password: str
+    

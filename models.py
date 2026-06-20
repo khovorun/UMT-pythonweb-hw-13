@@ -47,6 +47,11 @@ class User(Base):
         default=False
     )
 
+    role = Column(
+        String(20),
+        default="user"
+    )
+
     contacts = relationship(
         "Contact",
         back_populates="owner",

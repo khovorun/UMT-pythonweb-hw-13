@@ -3,10 +3,12 @@ services:
     image: postgres:15
     container_name: contacts_db
     restart: always
+
     environment:
       POSTGRES_DB: contacts_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
+
     ports:
       - "5432:5432"
 
@@ -16,8 +18,16 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7
+    container_name: contacts_redis
+
+    ports:
+      - "6379:6379"
+
   api:
     build: .
+
     container_name: contacts_api
 
     env_file:
@@ -29,4 +39,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+      redis:
+        condition: service_started
         

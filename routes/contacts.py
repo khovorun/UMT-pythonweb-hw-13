@@ -14,13 +14,15 @@ router = APIRouter(
 )
 
 
-# CREATE
 @router.post("/", response_model=ContactResponse)
 def create_contact(
     contact: ContactCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Create a new contact for the current user.
+    """
     existing_contact = (
         db.query(Contact)
         .filter(
@@ -48,12 +50,14 @@ def create_contact(
     return new_contact
 
 
-# READ ALL
 @router.get("/", response_model=list[ContactResponse])
 def get_contacts(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Return all contacts belonging to the current user.
+    """
     return (
         db.query(Contact)
         .filter(Contact.user_id == current_user.id)
@@ -61,7 +65,6 @@ def get_contacts(
     )
 
 
-# SEARCH
 @router.get("/search/", response_model=list[ContactResponse])
 def search_contacts(
     first_name: str | None = Query(None),
@@ -70,6 +73,9 @@ def search_contacts(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Search contacts by first name, last name or email.
+    """
     query = (
         db.query(Contact)
         .filter(Contact.user_id == current_user.id)
@@ -93,12 +99,14 @@ def search_contacts(
     return query.all()
 
 
-# BIRTHDAYS NEXT 7 DAYS
 @router.get("/birthdays/", response_model=list[ContactResponse])
 def upcoming_birthdays(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Return contacts whose birthday is within the next 7 days.
+    """
     contacts = (
         db.query(Contact)
         .filter(Contact.user_id == current_user.id)
@@ -121,13 +129,15 @@ def upcoming_birthdays(
     return result
 
 
-# READ ONE
 @router.get("/{contact_id}", response_model=ContactResponse)
 def get_contact(
     contact_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Return a contact by ID.
+    """
     contact = (
         db.query(Contact)
         .filter(
@@ -146,7 +156,6 @@ def get_contact(
     return contact
 
 
-# UPDATE
 @router.put("/{contact_id}", response_model=ContactResponse)
 def update_contact(
     contact_id: int,
@@ -154,6 +163,9 @@ def update_contact(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Update an existing contact.
+    """
     contact = (
         db.query(Contact)
         .filter(
@@ -178,13 +190,15 @@ def update_contact(
     return contact
 
 
-# DELETE
 @router.delete("/{contact_id}")
 def delete_contact(
     contact_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    """
+    Delete a contact.
+    """
     contact = (
         db.query(Contact)
         .filter(

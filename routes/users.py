@@ -3,7 +3,9 @@ from fastapi import (
     Depends,
     Request,
     UploadFile,
-    File
+    File,
+    HTTPException,
+    status
 )
 
 from sqlalchemy.orm import Session
@@ -46,6 +48,12 @@ def update_avatar(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admin can update avatar"
+        )
+
     avatar_url = upload_avatar(
         file.file
     )

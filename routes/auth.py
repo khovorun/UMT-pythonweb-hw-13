@@ -12,7 +12,9 @@ from models import User
 from schemas import (
     UserCreate,
     UserResponse,
-    Token
+    Token,
+    RequestPasswordReset,
+    ResetPassword
 )
 
 from services.auth import (
@@ -20,7 +22,9 @@ from services.auth import (
     verify_password,
     create_access_token,
     create_email_token,
-    verify_email_token
+    verify_email_token,
+    create_reset_token,
+    verify_reset_token
 )
 
 router = APIRouter(
@@ -157,4 +161,73 @@ def login(
     return {
         "access_token": access_token,
         "token_type": "bearer"
+    }
+
+
+@router.post("/request-password-reset")
+def request_password_reset(
+    body: RequestPasswordReset,
+    db: Session = Depends(get_db)
+):
+    user = (
+        db.query(User)
+        .filter(User.email == body.email)
+        .first()
+    )
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    reset_token = create_reset_token(
+        user.email
+    )
+
+    print(
+        f"\nPASSWORD RESET LINK:\n"
+        f"http://127.0.0.1:8000/auth/reset-password/{reset_token}\n"
+    )
+
+    return {
+        "message": "Password reset link generated"
+    }
+
+
+@router.post("/reset-password")
+def reset_password(
+    body: ResetPassword,
+    db: Session = Depends(get_db)
+):
+    email = verify_reset_token(
+        body.token
+    )
+
+    if email is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid token"
+        )
+
+    user = (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    user.password = get_password_hash(
+        body.new_password
+    )
+
+    db.commit()
+
+    return {
+        "message": "Password changed successfully"
     }

@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 sqlalchemy
-psycopg
+psycopg[binary]
 python-dotenv
 python-jose[cryptography]
 bcrypt
@@ -9,3 +9,4 @@ email-validator
 python-multipart
 slowapi
 cloudinary
+redis

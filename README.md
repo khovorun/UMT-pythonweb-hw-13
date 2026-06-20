@@ -1,28 +1,107 @@
-# UMT Python Web HW-08
+# Contacts API
 
-REST API для управління контактами на FastAPI.
+REST API for managing contacts built with FastAPI, PostgreSQL, Redis, Docker, JWT authentication, and Sphinx documentation.
 
-## Встановлення
+## Features
 
+* User registration and login
+* JWT authentication
+* Email confirmation
+* Password reset via token
+* User roles (user/admin)
+* Contact management (CRUD)
+* Search contacts
+* Upcoming birthdays
+* Redis caching
+* Cloudinary avatar upload
+* Docker support
+* Sphinx documentation
+* Pytest test suite
+
+## Technologies
+
+* FastAPI
+* SQLAlchemy
+* PostgreSQL
+* Redis
+* Docker & Docker Compose
+* JWT (python-jose)
+* Cloudinary
+* Pytest
+* Sphinx
+
+## Installation
+
+Clone repository:
+
+```bash
+git clone https://github.com/khovorun/UMT-pythonweb-hw-13.git
+cd UMT-pythonweb-hw-13
+```
+
+Create environment variables:
+
+```bash
+cp .env.example .env
+```
+
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-## Запуск
+## Run with Docker
 
-uvicorn main:app --reload
+```bash
+docker compose up --build
+```
 
-## Swagger
+API will be available at:
 
-http://127.0.0.1:8000/docs
+```text
+http://localhost:8000
+```
 
-## Реалізовано
+Swagger UI:
 
-- Create Contact
-- Get All Contacts
-- Get Contact By ID
-- Update Contact
-- Delete Contact
-- Search by first_name / last_name / email
-- Upcoming birthdays (7 days)
-- PostgreSQL
-- SQLAlchemy
-- Pydantic validation
+```text
+http://localhost:8000/docs
+```
+
+## Running Tests
+
+```bash
+pytest -v
+```
+
+Coverage report:
+
+```bash
+pytest --cov=. --cov-report=term
+```
+
+Current coverage:
+
+```text
+72%
+```
+
+## Documentation
+
+Build Sphinx documentation:
+
+```bash
+cd docs
+make html
+```
+
+Generated documentation:
+
+```text
+docs/build/html/index.html
+```
+
+## Author
+
+Kseniia Hovorun
